@@ -3,7 +3,7 @@
 A Telegram bot powered by Claude Code (Claude Channels) that acts as a smart personal assistant for AUM students. Built for the Deep Learning class, Week 11–12.
 
 **Platform:** Telegram  
-**Bot username:** @qauaua_bot
+**Bot username:** **@qauaua_bot**
 **How it works:** Claude Code runs locally → Claude Channels routes Telegram messages → custom skills handle requests
 
 ---
