@@ -1,6 +1,7 @@
 # Personal Bot
 
 A Telegram bot powered by Claude Code (Claude Channels) that acts as a smart personal assistant. 
+
 **Platform:** Telegram  
 **Bot username:** **@qauaua_bot**
 
