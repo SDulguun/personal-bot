@@ -13,7 +13,7 @@ A Telegram bot powered by Claude Code (Claude Channels) that acts as a smart per
 
 | Skill | Trigger phrases | What it does |
 |---|---|---|
-| **Moodle Campus Assistant** | "my deadlines", "my courses", "announcements", "setup moodle", "add deadlines to todo" | Fetches live data from AUM's Moodle (online.aum.edu.mn) via REST API |
+| **Moodle Campus Assistant** | "my deadlines", "my courses", "announcements", "setup moodle", "add deadlines to todo" | Fetches live data from AUM's Moodle (online.aum.edu.mn) via browser session cookie |
 | **AI Research & Document Summarizer** | "research X", "summarize this", "tell me about X", sends a file | Searches the web or reads uploaded documents and returns a structured summary |
 | **Smart Todo Manager** | "add todo X", "list tasks", "done with X", "remove X", "clear done" | Manages a persistent task list stored locally in `data/todos.md` |
 | **AI Tutor** | "teach me X", "explain X", "quiz me on X", "lesson on X" | Delivers structured lessons, quizzes, and logs your learning history |
@@ -44,6 +44,16 @@ A Telegram bot powered by Claude Code (Claude Channels) that acts as a smart per
 **Get a lesson:**
 > You: teach me about backpropagation  
 > Bot: *Lesson: Backpropagation* — What is it? ...Core Concepts... Check your understanding: [quiz question]
+
+---
+
+## Screenshots
+
+### Multi-Skill Chaining — Todos + Announcements + Teaching
+![Multi-skill chaining: pending todos, Moodle announcements, and quiz concept lesson in one request](screenshots/multi-skill-chaining.png)
+
+### Moodle-Todo Comparison + Prioritization Lesson
+![Moodle vs todo comparison and Eisenhower Matrix prioritization teaching](screenshots/moodle-todo-compare.png)
 
 ---
 
@@ -81,23 +91,21 @@ In a Claude Code session from the project directory:
 
 ### 3. Connect Moodle
 
-Get your AUM Moodle API token using one of these methods:
+AUM uses Google OAuth, so the standard REST API token doesn't work. Instead, we use a browser session cookie:
 
-**Option A — Terminal:**
-```bash
-curl -s -X POST 'https://online.aum.edu.mn/login/token.php' \
-  -d 'username=YOUR_USERNAME&password=YOUR_PASSWORD&service=moodle_mobile_app'
-```
-Copy the `token` value from the JSON response.
+1. Log into **online.aum.edu.mn** in your browser
+2. Press **F12** to open DevTools
+3. Go to **Application** tab (Chrome) or **Storage** tab (Firefox)
+4. Click **Cookies** → **online.aum.edu.mn**
+5. Find the cookie named **MoodleSession** and copy its value
 
-**Option B — Browser:**
-Log into online.aum.edu.mn → Your name → Preferences → Security → Security keys → Create key for "Moodle mobile web service"
-
-Save the token:
+Save the session cookie:
 ```bash
 mkdir -p data
-echo "YOUR_TOKEN_HERE" > data/moodle-token.txt
+echo "YOUR_SESSION_COOKIE" > data/moodle-session.txt
 ```
+
+> **Note:** The session expires after inactivity or logout. Say "setup moodle" to the bot to refresh it.
 
 ### 4. Launch the Bot
 
@@ -132,7 +140,7 @@ personal-bot/
 │   └── moodle_api.py                    ← Python helper for Moodle REST API
 ├── data/                                ← Gitignored runtime data
 │   ├── todos.md
-│   ├── moodle-token.txt
+│   ├── moodle-session.txt
 │   └── learning-log.md
 ├── README.md
 └── .gitignore
@@ -153,6 +161,6 @@ This project used:
 ## Technical Details
 
 - **Platform:** Claude Channels + Telegram Bot API
-- **Moodle:** AUM Moodle 4.5.2 at online.aum.edu.mn (REST API confirmed active)
-- **Moodle API functions used:** `core_calendar_get_calendar_upcoming_view`, `core_course_get_enrolled_courses_by_timeline_classification`, `mod_forum_get_forums_by_courses`
-- **Local data:** todos, learning log, and Moodle token stored in `data/` (gitignored)
+- **Moodle:** AUM Moodle 4.5.2 at online.aum.edu.mn (browser session cookie — AUM uses Google OAuth)
+- **Moodle API functions used:** `core_calendar_get_action_events_by_timesort`, `core_course_get_enrolled_courses_by_timeline_classification`, `mod_forum_get_forums_by_courses`
+- **Local data:** todos, learning log, and Moodle session stored in `data/` (gitignored)
