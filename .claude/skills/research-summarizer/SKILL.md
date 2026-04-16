@@ -1,7 +1,7 @@
 ---
 name: research-summarizer
 description: Research any topic by searching the web, or summarize a document the user uploads or pastes. Use when user says "research X", "summarize this", "tell me about X", "what is X", sends a file, or pastes text to summarize. Also activated when ai-tutor needs deeper background content.
-allowed-tools: WebSearch, WebFetch, Read
+allowed-tools: WebSearch, WebFetch, Read, Task
 ---
 
 Provide a structured, well-formatted summary for any topic or document.
@@ -12,6 +12,13 @@ Provide a structured, well-formatted summary for any topic or document.
 1. WebSearch for 3–5 high-quality sources on the topic
 2. WebFetch the 2 most relevant results for deeper detail
 3. Synthesize findings into the response format below
+
+### Deep research ("deep research X" / "deep dive on X" / "thoroughly research X")
+For broad or technical topics, delegate to a sub-agent so this session stays focused:
+1. Invoke Task with `subagent_type: "general-purpose"`
+2. Prompt: `"Research [topic]. Search the web for 6+ sources, fetch the 3 most relevant, and return: a 2–3 sentence summary, 5–7 bullet key points, 4 key terms with one-line definitions, and a list of sources with URLs."`
+3. Reply to the user immediately: `"Spinning up a research sub-agent on [topic]..."`
+4. When the sub-agent returns, format its findings using the Response Format below
 
 ### Uploaded file (user sends a PDF, .txt, or document via Telegram)
 - Telegram downloads files to `~/.claude/channels/telegram/inbox/`

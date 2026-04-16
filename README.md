@@ -14,7 +14,7 @@ A Telegram bot powered by Claude Code (Claude Channels) that acts as a smart per
 | Skill | Trigger phrases | What it does |
 |---|---|---|
 | **Moodle Campus Assistant** | "my deadlines", "my courses", "announcements", "setup moodle", "add deadlines to todo" | Fetches live data from AUM's Moodle (online.aum.edu.mn) via browser session cookie |
-| **AI Research & Document Summarizer** | "research X", "summarize this", "tell me about X", sends a file | Searches the web or reads uploaded documents and returns a structured summary |
+| **AI Research & Document Summarizer** | "research X", "deep research X", "summarize this", "tell me about X", sends a file | Searches the web or reads uploaded documents and returns a structured summary. For "deep research", delegates to a sub-agent for broader source coverage |
 | **Smart Todo Manager** | "add todo X", "list tasks", "done with X", "remove X", "clear done" | Manages a persistent task list stored locally in `data/todos.md` |
 | **AI Tutor** | "teach me X", "explain X", "quiz me on X", "lesson on X" | Delivers structured lessons, quizzes, and logs your learning history |
 
@@ -155,6 +155,34 @@ This project used:
 - **Feature branches** — `feature/moodle-assistant`, `feature/research-summarizer`, `feature/todo-manager`, `feature/ai-tutor`
 - **Git worktrees** — first 3 skills developed in parallel worktrees simultaneously
 - **Pull requests** — each skill merged via PR closing the corresponding issue
+- **Sub-agents** — used during development to reverse-engineer AUM's Moodle AJAX endpoints, and wired into `research-summarizer` at runtime for the "deep research X" trigger
+
+---
+
+## Troubleshooting
+
+**Moodle says "Session expired"**
+Your `MoodleSession` cookie has rolled over. Say `setup moodle` to the bot and paste a fresh cookie value — the skill will rewrite `data/moodle-session.txt`.
+
+**Bot stopped responding on Telegram**
+The Claude Code session that backs the bot has exited. Re-launch it:
+```bash
+cd personal-bot
+claude --channels plugin:telegram@claude-plugins-official
+```
+
+**"You are not allowed to message this bot"**
+The allowlist was reset or you're DM'ing from an unpaired account. In a Claude Code session:
+```
+/telegram:access pair <code>
+```
+where `<code>` is the 6-character string the bot DMs back when you message it.
+
+**Research feels shallow**
+Use the "deep research X" trigger instead of "research X" — it delegates to a sub-agent that pulls 6+ sources.
+
+**Script fails with `No session cookie`**
+`data/moodle-session.txt` doesn't exist yet. Either say "setup moodle" to the bot, or create it manually (see Setup step 3).
 
 ---
 
