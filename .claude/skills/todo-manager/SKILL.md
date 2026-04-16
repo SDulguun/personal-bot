@@ -4,7 +4,7 @@ description: Manage a personal to-do list stored in a local file. Use when user 
 allowed-tools: Read, Write, Edit
 ---
 
-Manage the user's todo list at `~/personal-bot/data/todos.md`.
+Manage the user's todo list at `data/todos.md` (project-relative).
 
 ## File Format
 

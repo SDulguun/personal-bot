@@ -61,7 +61,7 @@ If the user says "research X and teach me", "research X and make a lesson", or "
 
 ## Learning Log
 
-After every lesson (not quick explanations), append to `~/personal-bot/data/learning-log.md`:
+After every lesson (not quick explanations), append to `data/learning-log.md`:
 ```
 ## [YYYY-MM-DD] — [Topic]
 Key concepts covered: Concept1, Concept2, Concept3

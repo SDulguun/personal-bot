@@ -9,9 +9,9 @@ Setup:
 1. Log into online.aum.edu.mn in your browser
 2. Press Cmd+Option+I → Application tab → Cookies → online.aum.edu.mn
 3. Copy the value of the 'MoodleSession' cookie
-4. Save it: echo "YOUR_VALUE" > ~/personal-bot/data/moodle-session.txt
+4. Save it to data/moodle-session.txt in the project root
 
-Usage: python3 moodle_api.py <deadlines|courses|announcements>
+Usage: python3 scripts/moodle_api.py <deadlines|courses|announcements>
 """
 import sys
 import json
@@ -21,7 +21,7 @@ from pathlib import Path
 from datetime import datetime
 
 BASE = "https://online.aum.edu.mn"
-SESSION_FILE = Path.home() / "personal-bot" / "data" / "moodle-session.txt"
+SESSION_FILE = Path(__file__).resolve().parent.parent / "data" / "moodle-session.txt"
 
 
 def get_session():
